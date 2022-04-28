@@ -6,10 +6,7 @@ import model.ItemDTO;
 import view.tdm.ItemTM;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class ItemDAOImpl {
@@ -26,5 +23,11 @@ public class ItemDAOImpl {
             allItems.add(new ItemDTO(code, description, price, qtyOnHand));
         }
         return allItems;
+    }
+    public void delete(String code) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement pstm = connection.prepareStatement("DELETE FROM Item WHERE code=?");
+        pstm.setString(1, code);
+        pstm.executeUpdate();
     }
 }
