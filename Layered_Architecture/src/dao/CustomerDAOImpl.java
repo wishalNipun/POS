@@ -44,5 +44,10 @@ public class CustomerDAOImpl {
         return pstm.executeQuery().next();
     }
 
-    public
+    public void delete(String id) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement pstm = connection.prepareStatement("DELETE FROM Customer WHERE id=?");
+        pstm.setString(1, id);
+        pstm.executeUpdate();
+    }
 }
