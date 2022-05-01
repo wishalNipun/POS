@@ -7,6 +7,7 @@ import dao.PlaceOrderDAOImpl;
 import db.DBConnection;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -204,7 +205,7 @@ public class PlaceOrderFormController {
         try {
 
             ArrayList idArray = new PlaceOrderDAOImpl().loadAllCustomerIds();
-            
+
             for (Object ids: idArray
                  ) {
               cmbCustomerId.getItems().add((String) ids);
@@ -220,12 +221,10 @@ public class PlaceOrderFormController {
     private void loadAllItemCodes() {
         try {
             /*Get all items*/
-            Connection connection = DBConnection.getDbConnection().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Item");
-            while (rst.next()) {
-                cmbItemCode.getItems().add(rst.getString("code"));
-            }
+
+            ObservableList obList = new PlaceOrderDAOImpl().loadAllItemIds();
+            cmbItemCode.setItems(obList);
+
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         } catch (ClassNotFoundException e) {

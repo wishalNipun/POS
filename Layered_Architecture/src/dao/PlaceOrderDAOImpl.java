@@ -1,6 +1,8 @@
 package dao;
 
 import db.DBConnection;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.CustomerDTO;
 import model.ItemDTO;
 
@@ -62,5 +64,20 @@ public class PlaceOrderDAOImpl {
             );
         }
         return arrayList;
+    }
+
+    public ObservableList<String> loadAllItemIds() throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        Statement stm = connection.createStatement();
+        ResultSet rst = stm.executeQuery("SELECT * FROM Item");
+
+        ObservableList <String> obList = FXCollections.observableArrayList();
+
+        while (rst.next()){
+            obList.add(
+                    rst.getString(1)
+            );
+        }
+        return obList;
     }
 }
