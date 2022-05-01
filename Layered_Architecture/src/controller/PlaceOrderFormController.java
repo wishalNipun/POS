@@ -202,12 +202,12 @@ public class PlaceOrderFormController {
 
     private void loadAllCustomerIds() {
         try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
 
-            while (rst.next()) {
-                cmbCustomerId.getItems().add(rst.getString("id"));
+            ArrayList idArray = new PlaceOrderDAOImpl().loadAllCustomerIds();
+            
+            for (Object ids: idArray
+                 ) {
+              cmbCustomerId.getItems().add((String) ids);
             }
 
         } catch (SQLException e) {
