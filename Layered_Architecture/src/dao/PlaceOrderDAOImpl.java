@@ -29,6 +29,9 @@ public class PlaceOrderDAOImpl {
         rst.next();
         ItemDTO item = new ItemDTO(newItemCode + "", rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
         return item;
+
+
+
     }
 
     public Boolean exitItem(String code) throws SQLException, ClassNotFoundException {
