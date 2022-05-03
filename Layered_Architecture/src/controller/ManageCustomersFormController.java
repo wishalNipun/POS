@@ -2,9 +2,8 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
-import dao.Agreement;
+import dao.CustomerDAO;
 import dao.CustomerDAOImpl;
-import db.DBConnection;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,9 +21,6 @@ import view.tdm.CustomerTM;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -77,8 +73,8 @@ public class ManageCustomersFormController {
         /*Get all customers*/
         try {
 
-            Agreement agreement = new CustomerDAOImpl();
-            ArrayList<CustomerDTO> allCustomers = agreement.getAllCustomers();
+            CustomerDAO customerDAO = new CustomerDAOImpl();
+            ArrayList<CustomerDTO> allCustomers = customerDAO.getAllCustomers();
 
             for (CustomerDTO customer : allCustomers) {
                 tblCustomers.getItems().add(new CustomerTM(customer.getId(), customer.getName(), customer.getAddress()));
@@ -152,8 +148,8 @@ public class ManageCustomersFormController {
                 if (existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, id + " already exists").show();
                 }
-                Agreement agreement = new CustomerDAOImpl();
-                agreement.insertCustomer(new CustomerDTO(id,name,address));
+                CustomerDAO customerDAO = new CustomerDAOImpl();
+                customerDAO.insertCustomer(new CustomerDTO(id,name,address));
 
                 tblCustomers.getItems().add(new CustomerTM(id, name, address));
             } catch (SQLException e) {
@@ -169,8 +165,8 @@ public class ManageCustomersFormController {
                 if (!existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
                 }
-                Agreement agreement = new CustomerDAOImpl();
-                agreement.Update(new CustomerDTO(id,name,address));
+                CustomerDAO customerDAO = new CustomerDAOImpl();
+                customerDAO.Update(new CustomerDTO(id,name,address));
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to update the customer " + id + e.getMessage()).show();
             } catch (ClassNotFoundException e) {
@@ -188,8 +184,8 @@ public class ManageCustomersFormController {
 
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        Agreement agreement = new CustomerDAOImpl();
-        return agreement.existCustomer(id);
+        CustomerDAO customerDAO = new CustomerDAOImpl();
+        return customerDAO.existCustomer(id);
 
     }
 
@@ -201,8 +197,8 @@ public class ManageCustomersFormController {
             if (!existCustomer(id)) {
                 new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
             }
-            Agreement agreement = new CustomerDAOImpl();
-            agreement.delete(id);
+            CustomerDAO customerDAO = new CustomerDAOImpl();
+            customerDAO.delete(id);
 
             tblCustomers.getItems().remove(tblCustomers.getSelectionModel().getSelectedItem());
             tblCustomers.getSelectionModel().clearSelection();
@@ -217,8 +213,8 @@ public class ManageCustomersFormController {
 
     private String generateNewId() {
         try {
-            Agreement agreement = new CustomerDAOImpl();
-            return agreement.generateNewId();
+            CustomerDAO customerDAO = new CustomerDAOImpl();
+            return customerDAO.generateNewId();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new id " + e.getMessage()).show();
         } catch (ClassNotFoundException e) {
