@@ -387,7 +387,7 @@ public class PlaceOrderFormController {
 
     public ItemDTO findItem(String code) {
         try {
-           
+
             ItemDTO item = new PlaceOrderDAOImpl().findItems(code);
             return item;
         } catch (SQLException e) {

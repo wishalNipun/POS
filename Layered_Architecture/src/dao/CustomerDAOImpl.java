@@ -2,7 +2,6 @@ package dao;
 
 import db.DBConnection;
 import model.CustomerDTO;
-import view.tdm.CustomerTM;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
  * @since : 0.1.0
  **/
 
-public class CustomerDAOImpl {
+public class CustomerDAOImpl implements Agreement {
 
     public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
@@ -27,7 +26,7 @@ public class CustomerDAOImpl {
         }
         return allCustomers;
     }
-    public boolean insertCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
+    public Boolean insertCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer (id,name, address) VALUES (?,?,?)");
         pstm.setString(1, customerDTO.getId());
