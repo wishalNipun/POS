@@ -26,7 +26,7 @@ public class ItemDAOImpl implements ItemDAO {
     }
     @Override
     public void delete(String code) throws SQLException, ClassNotFoundException {
-      SQLUtil.executeUpdate("DELETE FROM Item WHERE code=?");
+      SQLUtil.executeUpdate("DELETE FROM Item WHERE code=?",code);
     }
     @Override
     public boolean insertItem(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
@@ -41,7 +41,8 @@ public class ItemDAOImpl implements ItemDAO {
     }
     @Override
     public Boolean existItems(String code) throws SQLException, ClassNotFoundException {
-      return SQLUtil.executeUpdate("SELECT code FROM Item WHERE code=?",code);
+      ResultSet rst= SQLUtil.executeQuery("SELECT code FROM Item WHERE code=?",code);
+      return rst.next();
     }
     @Override
     public  String generateNewId() throws SQLException, ClassNotFoundException {
