@@ -3,6 +3,9 @@ package controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import dao.CrudDAO;
+import dao.CustomerDAOImpl;
+import dao.ItemDAOImpl;
 import dao.PlaceOrderDAOImpl;
 import db.DBConnection;
 import javafx.application.Platform;
@@ -107,9 +110,8 @@ public class PlaceOrderFormController {
                             new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + newValue + "").show();
                         }
 
-                        PlaceOrderDAOImpl placeOrderDAO = new PlaceOrderDAOImpl();
-
-                        txtCustomerName.setText(placeOrderDAO.search(newValue));
+                        CrudDAO<CustomerDTO,String> customerDAO = new CustomerDAOImpl();
+                        txtCustomerName.setText(customerDAO.search(newValue+"").getName());
                     } catch (SQLException e) {
                         new Alert(Alert.AlertType.ERROR, "Failed to find the customer " + newValue + "" + e).show();
                     }
@@ -134,8 +136,10 @@ public class PlaceOrderFormController {
                     if (!existItem(newItemCode + "")) {
 //                        throw new NotFoundException("There is no such item associated with the id " + code);
                     }
-
-                    ItemDTO item = new PlaceOrderDAOImpl().findItems(newItemCode);
+//Search Item
+                    //DI
+                    CrudDAO<ItemDTO, String> itemDAO = new ItemDAOImpl();
+                    ItemDTO item = itemDAO.search(newItemCode + "");
                     txtDescription.setText(item.getDescription());
 
                     txtUnitPrice.setText(item.getUnitPrice().setScale(2).toString());
@@ -180,13 +184,15 @@ public class PlaceOrderFormController {
     }
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
-      PlaceOrderDAOImpl placeOrderDAO = new PlaceOrderDAOImpl();
-      return placeOrderDAO.exitItem(code);
+        //DI
+        CrudDAO<ItemDTO, String> itemDAO = new ItemDAOImpl();
+        return itemDAO.exist(code);
     }
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        PlaceOrderDAOImpl placeOrderDAO = new PlaceOrderDAOImpl();
-        return placeOrderDAO.exitCustomer(id);
+        //DI
+        CrudDAO<CustomerDTO, String> customerDAO = new CustomerDAOImpl();
+        return customerDAO.exist(id);
     }
 
     public String generateNewOrderId() {
@@ -204,11 +210,11 @@ public class PlaceOrderFormController {
     private void loadAllCustomerIds() {
         try {
 
-            ArrayList idArray = new PlaceOrderDAOImpl().loadAllCustomerIds();
-
-            for (Object ids: idArray
-                 ) {
-              cmbCustomerId.getItems().add((String) ids);
+            //DI
+            CrudDAO<CustomerDTO, String> customerDAO = new CustomerDAOImpl();
+            ArrayList<CustomerDTO> all = customerDAO.getAll();
+            for (CustomerDTO customerDTO : all) {
+                cmbCustomerId.getItems().add(customerDTO.getId());
             }
 
         } catch (SQLException e) {
@@ -220,11 +226,14 @@ public class PlaceOrderFormController {
 
     private void loadAllItemCodes() {
         try {
+
             /*Get all items*/
-
-            ObservableList obList = new PlaceOrderDAOImpl().loadAllItemIds();
-            cmbItemCode.setItems(obList);
-
+            //DI
+            CrudDAO<ItemDTO, String> itemDAO = new ItemDAOImpl();
+            ArrayList<ItemDTO> all = itemDAO.getAll();
+            for (ItemDTO dto : all) {
+                cmbItemCode.getItems().add(dto.getCode());
+            }
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         } catch (ClassNotFoundException e) {
@@ -387,9 +396,9 @@ public class PlaceOrderFormController {
 
     public ItemDTO findItem(String code) {
         try {
-
-            ItemDTO item = new PlaceOrderDAOImpl().findItems(code);
-            return item;
+//DI
+            CrudDAO<ItemDTO,String> itemDAO = new ItemDAOImpl();
+            return itemDAO.search(code);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to find the Item " + code, e);
         } catch (ClassNotFoundException e) {

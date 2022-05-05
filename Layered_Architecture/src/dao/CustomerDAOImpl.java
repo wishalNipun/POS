@@ -1,5 +1,6 @@
 package dao;
 
+import db.DBConnection;
 import model.CustomerDTO;
 
 import java.sql.*;
@@ -54,5 +55,15 @@ public class CustomerDAOImpl implements CrudDAO<CustomerDTO,String> {
         } else {
             return "C00-001";
         }
+    }
+
+    @Override
+    public CustomerDTO search(String id) throws SQLException, ClassNotFoundException {
+
+        ResultSet rst = SQLUtil.executeQuery("SELECT * FROM Customer WHERE id=?",id);
+        if (rst.next()){
+            return  new CustomerDTO(id + "", rst.getString("name"), rst.getString("address"));
+        }
+       return null;
     }
 }
