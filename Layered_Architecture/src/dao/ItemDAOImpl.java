@@ -1,17 +1,14 @@
 package dao;
 
-import db.DBConnection;
-import model.CustomerDTO;
 import model.ItemDTO;
-import view.tdm.ItemTM;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ItemDAOImpl implements ItemDAO {
+public class ItemDAOImpl implements CrudDAO<ItemDTO,String> {
     @Override
-    public ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException {
+    public ArrayList<ItemDTO> getAll() throws SQLException, ClassNotFoundException {
 
         ResultSet rst =SQLUtil.executeQuery("SELECT * FROM Item");
         ArrayList<ItemDTO> allItems = new ArrayList<>();
@@ -29,7 +26,7 @@ public class ItemDAOImpl implements ItemDAO {
       SQLUtil.executeUpdate("DELETE FROM Item WHERE code=?",code);
     }
     @Override
-    public boolean insertItem(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
+    public Boolean insert(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
 
     return SQLUtil.executeUpdate("INSERT INTO Item (code, description, unitPrice, qtyOnHand) VALUES (?,?,?,?)",itemDTO.getCode(),itemDTO.getDescription(),itemDTO.getUnitPrice(),itemDTO.getQtyOnHand());
 
@@ -40,7 +37,7 @@ public class ItemDAOImpl implements ItemDAO {
         return SQLUtil.executeUpdate("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?",itemDTO.getDescription(),itemDTO.getUnitPrice(),itemDTO.getQtyOnHand(),itemDTO.getCode());
     }
     @Override
-    public Boolean existItems(String code) throws SQLException, ClassNotFoundException {
+    public Boolean exist(String code) throws SQLException, ClassNotFoundException {
       ResultSet rst= SQLUtil.executeQuery("SELECT code FROM Item WHERE code=?",code);
       return rst.next();
     }
