@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 
 /**
@@ -25,6 +26,12 @@ public class OrderDTO  {
         this.customerId = customerId;
         this.customerName = customerName;
         this.orderTotal = orderTotal;
+    }
+
+    public OrderDTO(String orderId, LocalDate orderDate, String customerId) {
+        this.orderId = orderId;
+        this.orderDate = orderDate;
+        this.customerId = customerId;
     }
 
     public String getOrderId() {

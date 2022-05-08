@@ -3,10 +3,7 @@ package controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import dao.CrudDAO;
-import dao.CustomerDAOImpl;
-import dao.ItemDAOImpl;
-import dao.OrderDAOImpl;
+import dao.*;
 import db.DBConnection;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -198,7 +195,7 @@ public class PlaceOrderFormController {
     public String generateNewOrderId() {
         try {
            CrudDAO<OrderDTO, String> orderDAO = new OrderDAOImpl();
-           orderDAO.generateNewID();
+           return orderDAO.generateNewID();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new order id").show();
         } catch (ClassNotFoundException e) {
@@ -330,35 +327,33 @@ public class PlaceOrderFormController {
         /*Transaction*/
         Connection connection = null;
         try {
-            connection = DBConnection.getDbConnection().getConnection();
-            PreparedStatement stm = connection.prepareStatement("SELECT oid FROM `Orders` WHERE oid=?");
-            stm.setString(1, orderId);
+            //DI
+            CrudDAO<OrderDTO,String> orderDAO = new OrderDAOImpl();
+
             /*if order id already exist*/
-            if (stm.executeQuery().next()) {
+            if (orderDAO.exist(orderId)) {
 
             }
 
             connection.setAutoCommit(false);
-            stm = connection.prepareStatement("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)");
-            stm.setString(1, orderId);
-            stm.setDate(2, Date.valueOf(orderDate));
-            stm.setString(3, customerId);
 
-            if (stm.executeUpdate() != 1) {
+
+            //DI
+            CrudDAO<OrderDTO,String> orderDAO1 = new OrderDAOImpl();
+            Boolean save = orderDAO1.insert(new OrderDTO(orderId,orderDate,customerId));
+            if (!save) {
                 connection.rollback();
                 connection.setAutoCommit(true);
                 return false;
             }
 
-            stm = connection.prepareStatement("INSERT INTO OrderDetails (oid, itemCode, unitPrice, qty) VALUES (?,?,?,?)");
-
+//DI//DDDDDDDDDDDDDI
+            CrudDAO<OrderDetailDTO,String> orderDetailsDAO = new OrderDetailsDAOImpl();
             for (OrderDetailDTO detail : orderDetails) {
-                stm.setString(1, orderId);
-                stm.setString(2, detail.getItemCode());
-                stm.setBigDecimal(3, detail.getUnitPrice());
-                stm.setInt(4, detail.getQty());
 
-                if (stm.executeUpdate() != 1) {
+                Boolean insert = orderDetailsDAO.insert(detail);
+
+                if (!insert) {
                     connection.rollback();
                     connection.setAutoCommit(true);
                     return false;
