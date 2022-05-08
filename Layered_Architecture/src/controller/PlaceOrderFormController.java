@@ -304,9 +304,9 @@ public class PlaceOrderFormController {
     public void txtQty_OnAction(ActionEvent actionEvent) {
     }
 
-    public void btnPlaceOrder_OnAction(ActionEvent actionEvent) {
+    public void btnPlaceOrder_OnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         boolean b = saveOrder(orderId, LocalDate.now(), cmbCustomerId.getValue(),
-                tblOrderDetails.getItems().stream().map(tm -> new OrderDetailDTO(tm.getCode(), tm.getQty(), tm.getUnitPrice())).collect(Collectors.toList()));
+                tblOrderDetails.getItems().stream().map(tm -> new OrderDetailDTO(orderId,tm.getCode(), tm.getQty(), tm.getUnitPrice())).collect(Collectors.toList()));
 
         if (b) {
             new Alert(Alert.AlertType.INFORMATION, "Order has been placed successfully").show();
@@ -323,11 +323,12 @@ public class PlaceOrderFormController {
         calculateTotal();
     }
 
-    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) {
+    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails)  {
         /*Transaction*/
-        Connection connection = null;
+
         try {
             //DI
+            Connection connection = DBConnection.getDbConnection().getConnection();
             CrudDAO<OrderDTO,String> orderDAO = new OrderDAOImpl();
 
             /*if order id already exist*/
@@ -351,9 +352,9 @@ public class PlaceOrderFormController {
             CrudDAO<OrderDetailDTO,String> orderDetailsDAO = new OrderDetailsDAOImpl();
             for (OrderDetailDTO detail : orderDetails) {
 
-                Boolean insert = orderDetailsDAO.insert(detail);
+                Boolean save1 = orderDetailsDAO.insert(detail);
 
-                if (!insert) {
+                if (!save1) {
                     connection.rollback();
                     connection.setAutoCommit(true);
                     return false;
@@ -363,13 +364,10 @@ public class PlaceOrderFormController {
                 ItemDTO item = findItem(detail.getItemCode());
                 item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
 
-                PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
-                pstm.setString(1, item.getDescription());
-                pstm.setBigDecimal(2, item.getUnitPrice());
-                pstm.setInt(3, item.getQtyOnHand());
-                pstm.setString(4, item.getCode());
-
-                if (!(pstm.executeUpdate() > 0)) {
+//DI
+                CrudDAO<ItemDTO,String> itemDAO = new ItemDAOImpl();
+                Boolean update = itemDAO.Update(item);
+                if (!update) {
                     connection.rollback();
                     connection.setAutoCommit(true);
                     return false;

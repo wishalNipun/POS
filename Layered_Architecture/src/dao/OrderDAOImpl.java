@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class OrderDAOImpl implements CrudDAO<OrderDTO,String>{
     @Override
-    public ArrayList getAll() throws SQLException, ClassNotFoundException {
+    public ArrayList<OrderDTO> getAll() throws SQLException, ClassNotFoundException {
         return null;
     }
 
@@ -19,9 +19,9 @@ public class OrderDAOImpl implements CrudDAO<OrderDTO,String>{
     }
 
     @Override
-    public Boolean exist(String s) throws SQLException, ClassNotFoundException {
+    public Boolean exist(String oid) throws SQLException, ClassNotFoundException {
 
-       return SQLUtil.executeQuery("SELECT oid FROM `Orders` WHERE oid=?").next();
+       return SQLUtil.executeQuery("SELECT oid FROM `Orders` WHERE oid=?",oid).next();
     }
 
     @Override
