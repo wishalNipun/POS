@@ -66,4 +66,9 @@ public class CustomerDAOImpl implements CrudDAO<CustomerDTO,String> {
         }
        return null;
     }
+
+    @Override
+    public String generateNewID() throws SQLException, ClassNotFoundException {
+        return null;
+    }
 }

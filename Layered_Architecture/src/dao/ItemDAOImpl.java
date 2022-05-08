@@ -63,4 +63,9 @@ public class ItemDAOImpl implements CrudDAO<ItemDTO,String> {
         }
         return null;
     }
+
+    @Override
+    public String generateNewID() throws SQLException, ClassNotFoundException {
+        return null;
+    }
 }

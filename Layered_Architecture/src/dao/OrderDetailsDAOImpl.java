@@ -40,4 +40,9 @@ public class OrderDetailsDAOImpl implements CrudDAO<OrderDetailDTO,String>{
     public OrderDetailDTO search(String s) throws SQLException, ClassNotFoundException {
         return null;
     }
+
+    @Override
+    public String generateNewID() throws SQLException, ClassNotFoundException {
+        return null;
+    }
 }

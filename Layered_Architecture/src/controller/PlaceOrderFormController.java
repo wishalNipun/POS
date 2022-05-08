@@ -6,11 +6,10 @@ import com.jfoenix.controls.JFXTextField;
 import dao.CrudDAO;
 import dao.CustomerDAOImpl;
 import dao.ItemDAOImpl;
-import dao.PlaceOrderDAOImpl;
+import dao.OrderDAOImpl;
 import db.DBConnection;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.CustomerDTO;
 import model.ItemDTO;
+import model.OrderDTO;
 import model.OrderDetailDTO;
 import view.tdm.OrderDetailTM;
 
@@ -197,8 +197,8 @@ public class PlaceOrderFormController {
 
     public String generateNewOrderId() {
         try {
-            PlaceOrderDAOImpl placeOrderDAO = new PlaceOrderDAOImpl();
-            return placeOrderDAO.generateNewOrderId();
+           CrudDAO<OrderDTO, String> orderDAO = new OrderDAOImpl();
+           orderDAO.generateNewID();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new order id").show();
         } catch (ClassNotFoundException e) {
