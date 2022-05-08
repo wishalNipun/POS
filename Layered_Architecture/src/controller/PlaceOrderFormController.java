@@ -113,7 +113,7 @@ public class PlaceOrderFormController {
                         }
 
                         txtCustomerName.setText(customerDAO.search(newValue+"").getName());
-                        
+
                     } catch (SQLException e) {
                         new Alert(Alert.AlertType.ERROR, "Failed to find the customer " + newValue + "" + e).show();
                     }
