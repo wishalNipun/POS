@@ -3,6 +3,7 @@ package controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import dao.CrudDAO;
+import dao.custom.ItemDAO;
 import dao.custom.impl.ItemDAOImpl;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -41,7 +42,7 @@ public class ManageItemsFormController {
     public JFXTextField txtUnitPrice;
     public JFXButton btnAddNewItem;
     //property injection
-    private final CrudDAO crudDAO = new ItemDAOImpl();
+    private final ItemDAO itemDAO = new ItemDAOImpl();
     public void initialize() {
         tblItems.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
         tblItems.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -77,7 +78,7 @@ public class ManageItemsFormController {
         try {
             /*Get all items*/
 
-            ArrayList<ItemDTO> allItems = crudDAO.getAll();
+            ArrayList<ItemDTO> allItems = itemDAO.getAll();
             for (ItemDTO item : allItems) {
                 tblItems.getItems().add(new ItemTM(item.getCode(), item.getDescription(), item.getUnitPrice(), item.getQtyOnHand()));
             }
@@ -139,7 +140,7 @@ public class ManageItemsFormController {
             }
 
 
-            crudDAO.delete(code);
+            itemDAO.delete(code);
             tblItems.getItems().remove(tblItems.getSelectionModel().getSelectedItem());
             tblItems.getSelectionModel().clearSelection();
             initUI();
@@ -179,7 +180,7 @@ public class ManageItemsFormController {
                 }
                 //Save Item
 
-                crudDAO.insert(new ItemDTO(code,description,unitPrice,qtyOnHand));
+                itemDAO.insert(new ItemDTO(code,description,unitPrice,qtyOnHand));
                 tblItems.getItems().add(new ItemTM(code, description, unitPrice, qtyOnHand));
 
             } catch (SQLException e) {
@@ -195,7 +196,7 @@ public class ManageItemsFormController {
                 }
                 /*Update Item*/
 
-                crudDAO.Update(new ItemDTO(code,description,unitPrice,qtyOnHand));
+                itemDAO.Update(new ItemDTO(code,description,unitPrice,qtyOnHand));
 
                 ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
                 selectedItem.setDescription(description);
@@ -215,14 +216,14 @@ public class ManageItemsFormController {
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
 
-       return crudDAO.exist(code);
+       return itemDAO.exist(code);
     }
 
 
     private String generateNewId() {
         try {
 
-            return crudDAO.generateNewId();
+            return itemDAO.generateNewId();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         } catch (ClassNotFoundException e) {
