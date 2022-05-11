@@ -1,12 +1,13 @@
-package dao;
+package dao.custom.impl;
 
-import db.DBConnection;
+import dao.SQLUtil;
+import dao.custom.OrderDAO;
 import model.OrderDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class OrderDAOImpl implements CrudDAO<OrderDTO,String>{
+public class OrderDAOImpl implements OrderDAO {
     @Override
     public ArrayList<OrderDTO> getAll() throws SQLException, ClassNotFoundException {
         return null;

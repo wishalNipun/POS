@@ -1,6 +1,7 @@
-package dao;
+package dao.custom.impl;
 
-import db.DBConnection;
+import dao.SQLUtil;
+import dao.custom.CustomerDAO;
 import model.CustomerDTO;
 
 import java.sql.*;
@@ -11,7 +12,8 @@ import java.util.ArrayList;
  * @since : 0.1.0
  **/
 
-public class CustomerDAOImpl implements CrudDAO<CustomerDTO,String> {
+public class CustomerDAOImpl implements CustomerDAO {
+
     @Override
     public ArrayList<CustomerDTO> getAll() throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.executeQuery("SELECT * FROM Customer");
@@ -69,6 +71,11 @@ public class CustomerDAOImpl implements CrudDAO<CustomerDTO,String> {
 
     @Override
     public String generateNewID() throws SQLException, ClassNotFoundException {
+        return null;
+    }
+
+    @Override
+    public ArrayList<CustomerDTO> getAllCustomerUsingByAddress() {
         return null;
     }
 }
