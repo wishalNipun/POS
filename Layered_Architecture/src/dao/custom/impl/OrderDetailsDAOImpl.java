@@ -39,13 +39,11 @@ public class OrderDetailsDAOImpl implements OrderDetailDAO {
         return null;
     }
 
+
     @Override
     public OrderDetailDTO search(String s) throws SQLException, ClassNotFoundException {
         return null;
     }
 
-    @Override
-    public String generateNewID() throws SQLException, ClassNotFoundException {
-        return null;
-    }
+
 }

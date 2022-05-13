@@ -69,10 +69,7 @@ public class CustomerDAOImpl implements CustomerDAO {
        return null;
     }
 
-    @Override
-    public String generateNewID() throws SQLException, ClassNotFoundException {
-        return null;
-    }
+
 
     @Override
     public ArrayList<CustomerDTO> getAllCustomerUsingByAddress() {

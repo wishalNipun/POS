@@ -65,8 +65,5 @@ public class ItemDAOImpl implements ItemDAO {
         return null;
     }
 
-    @Override
-    public String generateNewID() throws SQLException, ClassNotFoundException {
-        return null;
-    }
+
 }
