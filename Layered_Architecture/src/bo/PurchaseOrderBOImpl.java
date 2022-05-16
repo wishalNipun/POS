@@ -91,4 +91,5 @@ public class PurchaseOrderBOImpl {
     public ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException {
         return itemDAO.getAll();
     }
+
 }

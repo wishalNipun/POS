@@ -1,5 +1,6 @@
 package controller;
 
+import bo.CustomerBOImpl;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import dao.CrudDAO;
@@ -42,7 +43,6 @@ public class ManageCustomersFormController {
     public TableView<CustomerTM> tblCustomers;
     public JFXButton btnAddNewCustomer;
     //property injection
-    private final CustomerDAO CRUDDAO = new CustomerDAOImpl();
     public void initialize() {
         tblCustomers.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));
         tblCustomers.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -74,9 +74,10 @@ public class ManageCustomersFormController {
         tblCustomers.getItems().clear();
         /*Get all customers*/
         try {
-
-
-            ArrayList<CustomerDTO> allCustomers = CRUDDAO.getAll();
+            //Loose Coupling
+            //DI
+            CustomerBOImpl customerBO = new CustomerBOImpl();
+            ArrayList<CustomerDTO> allCustomers = customerBO.getAllCustomers();
 
             for (CustomerDTO customer : allCustomers) {
                 tblCustomers.getItems().add(new CustomerTM(customer.getId(), customer.getName(), customer.getAddress()));
@@ -150,8 +151,10 @@ public class ManageCustomersFormController {
                 if (existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, id + " already exists").show();
                 }
-
-                CRUDDAO.insert(new CustomerDTO(id,name,address));
+                //Loose Coupling
+                //DI
+                CustomerBOImpl customerBO = new CustomerBOImpl();
+                customerBO.insertCustomer(new CustomerDTO(id,name,address));
 
                 tblCustomers.getItems().add(new CustomerTM(id, name, address));
             } catch (SQLException e) {
@@ -167,8 +170,12 @@ public class ManageCustomersFormController {
                 if (!existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
                 }
+                //Loose Coupling
+                //DI
+                CustomerBOImpl customerBO = new CustomerBOImpl();
 
-                CRUDDAO.Update(new CustomerDTO(id,name,address));
+
+                customerBO.updateCustomer(new CustomerDTO(id,name,address));
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to update the customer " + id + e.getMessage()).show();
             } catch (ClassNotFoundException e) {
@@ -186,8 +193,11 @@ public class ManageCustomersFormController {
 
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
+        //Loose Coupling
+        //DI
+        CustomerBOImpl customerBO = new CustomerBOImpl();
 
-        return CRUDDAO.exist(id);
+        return customerBO.customerExist(id);
 
     }
 
@@ -199,8 +209,11 @@ public class ManageCustomersFormController {
             if (!existCustomer(id)) {
                 new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
             }
+            //Loose Coupling
+            //DI
+            CustomerBOImpl customerBO = new CustomerBOImpl();
 
-            CRUDDAO.delete(id);
+            customerBO.deleteCustomer(id);
 
             tblCustomers.getItems().remove(tblCustomers.getSelectionModel().getSelectedItem());
             tblCustomers.getSelectionModel().clearSelection();
@@ -215,8 +228,11 @@ public class ManageCustomersFormController {
 
     private String generateNewId() {
         try {
+            //Loose Coupling
+            //DI
+            CustomerBOImpl customerBO = new CustomerBOImpl();
 
-            return CRUDDAO.generateNewId();
+            return customerBO.generateCustomerNewId();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new id " + e.getMessage()).show();
         } catch (ClassNotFoundException e) {
