@@ -2,7 +2,6 @@ package bo;
 
 import dao.custom.CustomerDAO;
 import dao.custom.impl.CustomerDAOImpl;
-import model.CustomDTO;
 import model.CustomerDTO;
 
 import java.sql.SQLException;
@@ -14,6 +13,7 @@ public class CustomerBOImpl {
     public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
         return CRUDDAO.getAll();
     }
+
     public boolean insertCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
         return CRUDDAO.insert(dto);
     }
@@ -29,6 +29,7 @@ public class CustomerBOImpl {
     public void deleteCustomer(String id) throws SQLException, ClassNotFoundException {
         CRUDDAO.delete(id);
     }
+
     public String generateCustomerNewId() throws SQLException, ClassNotFoundException {
         return CRUDDAO.generateNewId();
     }
