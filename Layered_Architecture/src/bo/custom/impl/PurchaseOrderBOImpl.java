@@ -1,5 +1,6 @@
-package bo;
+package bo.custom.impl;
 
+import bo.custom.PurchaseOrderBo;
 import dao.custom.*;
 import dao.custom.impl.*;
 import db.DBConnection;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PurchaseOrderBOImpl implements PurchaseOrderBo{
+public class PurchaseOrderBOImpl implements PurchaseOrderBo {
     private final CustomerDAO customerDAO = new CustomerDAOImpl();
     private final ItemDAO itemDAO = new ItemDAOImpl();
     private final OrderDAO orderDAO = new OrderDAOImpl();
@@ -49,9 +50,9 @@ public class PurchaseOrderBOImpl implements PurchaseOrderBo{
                     return false;
                 }
 
-//                //Search & Update Item
-                //ItemDTO item = findItem(detail.getItemCode());
-                ItemDTO item = null;
+          //Search & Update Item
+
+                ItemDTO item = searchItem(detail.getItemCode());
                 item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
 
                 Boolean update = itemDAO.Update(item);
