@@ -1,6 +1,8 @@
 package controller;
 
+import bo.BOFactory;
 import bo.custom.impl.ItemBOImpl;
+
 import bo.custom.ItemBo;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
@@ -41,7 +43,7 @@ public class ManageItemsFormController {
     public JFXTextField txtUnitPrice;
     public JFXButton btnAddNewItem;
     //property injection
-    private final ItemBo itemBO = new ItemBOImpl();
+    private final ItemBo itemBO = (ItemBo) BOFactory.getBOFactory().getBO(BOFactory.BOTypes.ITEM);
     public void initialize() {
         tblItems.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
         tblItems.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("description"));

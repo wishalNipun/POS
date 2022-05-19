@@ -1,5 +1,6 @@
 package controller;
 
+import bo.BOFactory;
 import bo.custom.impl.PurchaseOrderBOImpl;
 import bo.custom.PurchaseOrderBo;
 import com.jfoenix.controls.JFXButton;
@@ -55,7 +56,7 @@ public class PlaceOrderFormController {
     public Label lblTotal;
     private String orderId;
 
-    private final PurchaseOrderBo purchaseOrderBO = new PurchaseOrderBOImpl();
+    private final PurchaseOrderBo purchaseOrderBO = (PurchaseOrderBo) BOFactory.getBOFactory().getBO(BOFactory.BOTypes.PURCHASE_ORDER);
     public void initialize() throws SQLException, ClassNotFoundException {
 
 
