@@ -3,7 +3,8 @@ package bo.custom.impl;
 import bo.custom.CustomerBo;
 import dao.DAOFactory;
 import dao.custom.CustomerDAO;
-import model.CustomerDTO;
+import dto.CustomerDTO;
+import entity.Customer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,15 +14,20 @@ public class CustomerBOImpl implements CustomerBo {
 
     @Override
     public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
-        return CRUDDAO.getAll();
+        ArrayList<Customer> all = CRUDDAO.getAll();
+        ArrayList<CustomerDTO> allCustomers= new ArrayList<>();
+        for (Customer customer : all) {
+            allCustomers.add(new CustomerDTO(customer.getId(),customer.getName(),customer.getAddress()));
+        }
+        return allCustomers;
     }
     @Override
     public boolean insertCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
-        return CRUDDAO.insert(dto);
+        return CRUDDAO.insert(new Customer(dto.getId(),dto.getName(),dto.getAddress()));
     }
     @Override
     public boolean updateCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
-        return CRUDDAO.Update(dto);
+        return CRUDDAO.Update(new Customer(dto.getId(),dto.getName(),dto.getAddress()));
     }
     @Override
     public boolean customerExist(String id) throws SQLException, ClassNotFoundException {
